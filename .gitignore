@@ -34,3 +34,5 @@ captures/
 *.lock
 
 *.bin
+
+.idea/workspace.xml

@@ -106,7 +106,7 @@ public class MainActivity extends AppCompatActivity implements BaseFragment.OnFr
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 MessageModel mm = dataSnapshot.getValue(MessageModel.class);
-                if(mm.getAuthorID().equals(authorID) )incrementPointsDisplay((int)mm.value);
+                if(mm.getAuthorID().equals(authorID))incrementPointsDisplay((int)mm.value);
             }
 
             @Override

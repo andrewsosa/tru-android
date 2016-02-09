@@ -30,6 +30,9 @@ import com.firebase.client.Query;
 import com.firebase.ui.FirebaseRecyclerAdapter;
 import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
 
+import java.util.HashMap;
+import java.util.Map;
+
 
 public class MessageListFragment extends Fragment {
 
@@ -256,12 +259,11 @@ public class MessageListFragment extends Fragment {
                                                     .child("feed")
                                                     .child(ref.getKey());
 
-                                            //mm.addAgreedUser(target.getAuth().getUid());
                                             String authorID = target.getAuth().getUid();
-                                            model.value++;
 
                                             // TODO make this less gross
-                                            target.setValue(model);
+                                            //target.setValue(model);
+                                            target.child("value").setValue(++model.value);
                                             target.child("agreed").child(authorID).setValue(true);
 
                                             new Handler().postDelayed(new Runnable() {
