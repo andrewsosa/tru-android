@@ -62,7 +62,7 @@ public class MainActivity extends AppCompatActivity implements BaseFragment.OnFr
         tru.setLetterSpacing((float)0.1);
 
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        final FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -70,11 +70,23 @@ public class MainActivity extends AppCompatActivity implements BaseFragment.OnFr
             }
         });
 
-        fab.setOnLongClickListener(new View.OnLongClickListener() {
+
+
+        mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
-            public boolean onLongClick(View v) {
-                ref.unauth();
-                return true;
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                if(position == 0) fab.show();
+                else fab.hide();
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
             }
         });
 
@@ -89,11 +101,11 @@ public class MainActivity extends AppCompatActivity implements BaseFragment.OnFr
         });
 
 
-        ref.child("users").child(ref.getAuth().getUid()).child("sent").addChildEventListener(new ChildEventListener() {
+        ref.child("feed").orderByChild("authorID").equalTo(ref.getAuth().getUid()).addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 MessageModel mm = dataSnapshot.getValue(MessageModel.class);
-                incrementPointsDisplay((int)mm.getValue());
+                incrementPointsDisplay((int)mm.value);
             }
 
             @Override
@@ -129,15 +141,16 @@ public class MainActivity extends AppCompatActivity implements BaseFragment.OnFr
     public static Fragment prepareFragment(int position) {
 
         Firebase ref = new Firebase(Tru.URL);
-        ref = ref.child("users").child(ref.getAuth().getUid());
 
         Query q;
 
         if(position == 0) {
-            q = ref.child("inbox");
+            //q = ref.child("inbox");
+            q = ref.child("feed").orderByChild("order").limitToFirst(50);
             return MessageListFragment.newInstance(q);
         } else {
-            q = ref.child("sent");
+            //q = ref.child("users").child(ref.getAuth().getUid()).child("sent");
+            q = ref.child("feed").orderByChild("authorID").equalTo(ref.getAuth().getUid());
             return FriendsListFragment.newInstance(q);
         }
 
@@ -160,7 +173,7 @@ public class MainActivity extends AppCompatActivity implements BaseFragment.OnFr
 
         @Override
         public CharSequence getPageTitle(int position) {
-            return position == 0 ? "what's Fire" : "your Fam";
+            return position == 0 ? "what's Fire" : "you said";
         }
     }
 

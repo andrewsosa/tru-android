@@ -13,6 +13,8 @@ import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
 
+import java.util.Calendar;
+
 public class SendingActivity extends AppCompatActivity {
 
     @Override
@@ -38,43 +40,21 @@ public class SendingActivity extends AppCompatActivity {
         EditText input = (EditText) findViewById(R.id.et_message);
         final String message = input.getText().toString().trim();
 
-        if(message.length() >0) {
+        if(message.length() >0 && message.length()<140) {
 
 
             final Firebase users = new Firebase(Tru.URL).child("users");
+            final String authorID = users.getAuth().getUid();
 
-            final Firebase outbox = users.child(users.getAuth().getUid()).child("sent").push();
-            outbox.setValue(new MessageModel(users.getAuth().getUid(), message));
+            final Firebase feedRef = new Firebase(Tru.URL).child("feed").push();
+            feedRef.setValue(new MessageModel(authorID, message));
+            feedRef.setPriority(0-Calendar.getInstance().getTimeInMillis());
 
-            users.addChildEventListener(new ChildEventListener() {
-                @Override
-                public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                    if (!dataSnapshot.getRef().getKey().equals(users.getAuth().getUid())) {
-                        Firebase ref = dataSnapshot.getRef().child("inbox").child(outbox.getKey());
-                        ref.setValue(new MessageModel(ref.getAuth().getUid(), message));
-                    }
-                }
+            users.child(authorID).child("sent")
+                    .child(feedRef.getKey())
+                    .setValue(new MessageModel(authorID, message));
 
-                @Override
-                public void onChildChanged(DataSnapshot dataSnapshot, String s) {
 
-                }
-
-                @Override
-                public void onChildRemoved(DataSnapshot dataSnapshot) {
-
-                }
-
-                @Override
-                public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-
-                }
-
-                @Override
-                public void onCancelled(FirebaseError firebaseError) {
-
-                }
-            });
             Toast.makeText(this, "It's lit, yo", Toast.LENGTH_SHORT).show();
             finish();
         } else {

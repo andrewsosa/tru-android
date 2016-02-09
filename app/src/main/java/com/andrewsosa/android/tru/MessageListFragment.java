@@ -5,16 +5,18 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Typeface;
-import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
+import android.support.v4.*;
+import android.support.v4.BuildConfig;
 import android.support.v4.app.Fragment;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewAnimationUtils;
@@ -24,14 +26,9 @@ import android.widget.TextView;
 
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
-import com.firebase.client.FirebaseError;
 import com.firebase.client.Query;
-import com.firebase.client.ValueEventListener;
 import com.firebase.ui.FirebaseRecyclerAdapter;
 import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
-
-import org.w3c.dom.Text;
-
 
 
 public class MessageListFragment extends Fragment {
@@ -45,6 +42,12 @@ public class MessageListFragment extends Fragment {
     private FirebaseRecyclerAdapter mAdapter;
     private ImageView mEmptyView;
 
+    // View types
+    public static final int DEFAULT = 0;
+    public static final int AUTHOR = 1;
+    public static final int HIDDEN = 2;
+    public static final int AGREED = 3;
+
 
     public MessageListFragment() {
         // Required empty public constructor
@@ -55,6 +58,10 @@ public class MessageListFragment extends Fragment {
         MessageListFragment fragment = new MessageListFragment();
         fragment.setQueryRef(query);
         return fragment;
+    }
+
+    public void setQueryRef(Query queryRef) {
+        this.queryRef = queryRef;
     }
 
     @Override
@@ -98,49 +105,9 @@ public class MessageListFragment extends Fragment {
             }
         });
 
-        ItemTouchHelper.SimpleCallback simpleItemTouchCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.RIGHT) {
 
-            @Override
-            public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
-                return false;
-            }
-
-            @Override
-            public void onSwiped(RecyclerView.ViewHolder viewHolder, int swipeDir) {
-                //Remove swiped item from list and notify the RecyclerView
-                mAdapter.getRef(viewHolder.getAdapterPosition()).removeValue();
-            }
-
-            @Override
-            public void onChildDraw(Canvas c, RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
-                if (actionState == ItemTouchHelper.ACTION_STATE_SWIPE) {
-                    // Get RecyclerView item from the ViewHolder
-                    View itemView = viewHolder.itemView;
-
-                    Paint p = new Paint();
-                    p.setColor(getResources().getColor(R.color.red_400));
-                    if (dX > 0) {
-                        /* Set your color for positive displacement */
-
-                        // Draw Rect with varying right side, equal to displacement dX
-                        c.drawRect((float) itemView.getLeft(), (float) itemView.getTop(), dX,
-                                (float) itemView.getBottom(), p);
-                    } else {
-                        /* Set your color for negative displacement */
-
-                        // Draw Rect with varying left side, equal to the item's right side plus negative displacement dX
-                        c.drawRect((float) itemView.getRight() + dX, (float) itemView.getTop(),
-                                (float) itemView.getRight(), (float) itemView.getBottom(), p);
-                    }
-
-                    super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
-                }
-            }
-        };
-
-        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleItemTouchCallback);
-        itemTouchHelper.attachToRecyclerView(mRecyclerView);
-
+        ItemTouchHelper helper = new ItemTouchHelper(new MessageTouchCallbacks(0, ItemTouchHelper.RIGHT));
+        helper.attachToRecyclerView(mRecyclerView);
     }
 
     @Override
@@ -161,24 +128,21 @@ public class MessageListFragment extends Fragment {
     }
 
 
-    public void setQueryRef(Query queryRef) {
-        this.queryRef = queryRef;
-    }
-
-
-
     public static class MessageVH extends RecyclerView.ViewHolder {
 
         View tile;
-        TextView message;
-        TextView reveal;
-        View overtile;
+        TextView messageText;
+        TextView revealText;
+        TextView reactionText;
+        ImageView icon;
 
         public MessageVH(View itemView) {
             super(itemView);
             this.tile = itemView;
-            this.message = (TextView) itemView.findViewById(R.id.tv_message);
-            this.reveal = (TextView) itemView.findViewById(R.id.tv_tru);
+            this.messageText = (TextView) itemView.findViewById(R.id.tv_message);
+            this.revealText = (TextView) itemView.findViewById(R.id.tv_tru);
+            this.reactionText = (TextView) itemView.findViewById(R.id.tv_response);
+            this.icon = (ImageView) itemView.findViewById(R.id.icon);
         }
     }
 
@@ -189,89 +153,201 @@ public class MessageListFragment extends Fragment {
         }
 
         @Override
-        protected void populateViewHolder(final MessageVH viewHolder, MessageModel model, int position) {
-            viewHolder.message.setText(model.getContents());
+        protected MessageModel parseSnapshot(DataSnapshot snapshot) {
+          return ModelTools.fullMessageParse(snapshot);
+        }
 
-            viewHolder.reveal.setTypeface(Typeface.createFromAsset(getContext().getAssets(), "ProductSans.ttf"));
-            viewHolder.reveal.setLetterSpacing((float)0.3);
+        @Override
+        public int getItemViewType(int position) {
+            String userID = new Firebase(Tru.URL).getAuth().getUid();
+            MessageModel mm = this.getItem(position);
 
-            viewHolder.tile.setOnLongClickListener(new View.OnLongClickListener() {
-                @Override
-                public boolean onLongClick(View v) {
+            if(mm.getAuthorID().equals(userID)) return AUTHOR;
+            else if(mm.ignoredBy(userID)) return HIDDEN;
+            else if(mm.agreedBy(userID)) return AGREED;
+            else return DEFAULT;
 
-                    View myView = viewHolder.reveal;
+        }
 
-                    // get the center for the clipping circle
-                    int cx = myView.getWidth() / 2;
-                    int cy = myView.getHeight() / 2;
+        @Override
+        public MessageVH onCreateViewHolder(ViewGroup parent, int viewType) {
 
-                    // get the final radius for the clipping circle
-                    float finalRadius = (float) Math.hypot(cx, cy);
+            // create a new view
+            int layout = R.layout.tile_message;
 
-                    // create the animator for this view (the start radius is zero)
-                    Animator anim =
-                            ViewAnimationUtils.createCircularReveal(myView, cx, cy, 0, finalRadius);
+            View v = LayoutInflater.from(parent.getContext()).inflate(layout, parent, false);
 
-                    // make the view visible and start the animation
-                    myView.setVisibility(View.VISIBLE);
-                    anim.start();
-                    anim.addListener(new Animator.AnimatorListener() {
-                        @Override
-                        public void onAnimationStart(Animator animation) {}
-
-                        @Override
-                        public void onAnimationEnd(Animator animation) {
-
-                            new Handler().postDelayed(new Runnable() {
-                                @Override
-                                public void run() {
-                                    final Firebase ref = mAdapter.getRef(viewHolder.getAdapterPosition());
-
-                                    ref.addListenerForSingleValueEvent(new ValueEventListener() {
-                                        @Override
-                                        public void onDataChange(DataSnapshot dataSnapshot) {
-                                            MessageModel mm = dataSnapshot.getValue(MessageModel.class);
-
-                                            Firebase target = new Firebase(Tru.URL)
-                                                    .child("users")
-                                                    .child(mm.getAuthorKey())
-                                                    .child("sent")
-                                                    .child(ref.getKey());
-
-                                            target.setValue(mm.incPoints());
-
-                                            ref.removeValue();
-                                        }
-
-                                        @Override
-                                        public void onCancelled(FirebaseError firebaseError) {
-
-                                        }
-                                    });
+            // optionally set the view's size, margins, paddings and layout parameters
+            return new MessageVH(v);
+        }
 
 
+        @Override
+        protected void populateViewHolder(final MessageVH viewHolder, final MessageModel model, int position) {
 
+            Log.d("tru", ""+getItemViewType(position));
+
+            viewHolder.messageText.setText(model.getContents());
+
+            if (this.getItemViewType(position) == HIDDEN) {
+                viewHolder.tile.setVisibility(View.GONE);
+                viewHolder.messageText.setText(model.getContents());
+            }
+
+            if (this.getItemViewType(position) == AUTHOR) {
+                String x = "" + model.getValue() + " tru points";
+                viewHolder.reactionText.setVisibility(View.VISIBLE);
+                viewHolder.reactionText.setText(x);
+                viewHolder.icon.setImageResource(R.drawable.ic_subdirectory_arrow_right_black_24dp);
+                viewHolder.messageText.setTypeface(Typeface.create("sans-serif", Typeface.NORMAL));
+
+
+            }
+
+            if (this.getItemViewType(position) == AGREED) {
+                viewHolder.icon.setImageResource(R.drawable.ic_check_box_outline_blank_black_24dp);
+                viewHolder.messageText.setTypeface(Typeface.create("sans-serif", Typeface.NORMAL));
+            }
+
+            if (this.getItemViewType(position) == DEFAULT) {
+
+                viewHolder.revealText.setTypeface(Typeface.createFromAsset(getContext().getAssets(), "ProductSans.ttf"));
+                viewHolder.revealText.setLetterSpacing((float) 0.3);
+
+                viewHolder.messageText.setTypeface(Typeface.create("sans-serif-medium", Typeface.NORMAL));
+                viewHolder.icon.setImageResource(R.drawable.ic_chevron_right_black_32dp);
+
+                viewHolder.tile.setClickable(true);
+                viewHolder.tile.setOnLongClickListener(new View.OnLongClickListener() {
+                    @Override
+                    public boolean onLongClick(View v) {
+
+                        View myView = viewHolder.revealText;
+
+                        // get the center for the clipping circle
+                        int cx = myView.getWidth() / 2;
+                        int cy = myView.getHeight() / 2;
+
+                        // get the final radius for the clipping circle
+                        float finalRadius = (float) Math.hypot(cx, cy);
+
+                        // create the animator for this view (the start radius is zero)
+                        Animator anim =
+                                ViewAnimationUtils.createCircularReveal(myView, cx, cy, 0, finalRadius);
+
+                        // make the view visible and start the animation
+                        myView.setVisibility(View.VISIBLE);
+                        anim.start();
+                        anim.addListener(new Animator.AnimatorListener() {
+                            @Override
+                            public void onAnimationStart(Animator animation) {
+                            }
+
+                            @Override
+                            public void onAnimationEnd(Animator animation) {
+
+                                try {
                                     new Handler().postDelayed(new Runnable() {
                                         @Override
                                         public void run() {
-                                            viewHolder.reveal.setVisibility(View.INVISIBLE);
+                                            final Firebase ref = mAdapter.getRef(viewHolder.getAdapterPosition());
+
+                                            Firebase target = new Firebase(Tru.URL)
+                                                    .child("feed")
+                                                    .child(ref.getKey());
+
+                                            //mm.addAgreedUser(target.getAuth().getUid());
+                                            String authorID = target.getAuth().getUid();
+                                            model.value++;
+
+                                            // TODO make this less gross
+                                            target.setValue(model);
+                                            target.child("agreed").child(authorID).setValue(true);
+
+                                            new Handler().postDelayed(new Runnable() {
+                                                @Override
+                                                public void run() {
+                                                    viewHolder.revealText.setVisibility(View.INVISIBLE);
+                                                }
+                                            }, 500);
+
                                         }
-                                    },500);
-
+                                    }, 2000);
+                                } catch (Exception e) {
+                                    Log.e("Tru", "Someone did the tj thing");
                                 }
-                            },2000);
-                        }
+                            }
 
-                        @Override
-                        public void onAnimationCancel(Animator animation) {}
-                        @Override
-                        public void onAnimationRepeat(Animator animation) {}
-                    });
+                            @Override
+                            public void onAnimationCancel(Animator animation) {
+                            }
+
+                            @Override
+                            public void onAnimationRepeat(Animator animation) {
+                            }
+                        });
 
 
-                    return true;
+                        return true;
+                    }
+                });
+            }
+        }
+    }
+
+    public class MessageTouchCallbacks extends ItemTouchHelper.SimpleCallback {
+
+        public MessageTouchCallbacks(int dragDirs, int swipeDirs) {
+            super(dragDirs, swipeDirs);
+        }
+
+        @Override
+        public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
+            return false;
+        }
+
+        @Override
+        public void onSwiped(RecyclerView.ViewHolder viewHolder, int swipeDir) {
+            //Remove swiped item from list and notify the RecyclerView
+            try {
+                mAdapter.getRef(viewHolder.getAdapterPosition()).removeValue();
+            } catch (Exception e) {
+                Log.e("Tru", "Someone did the TJ thing");
+            }
+        }
+
+        @Override
+        public void onChildDraw(Canvas c, RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
+            if (actionState == ItemTouchHelper.ACTION_STATE_SWIPE) {
+                // Get RecyclerView item from the ViewHolder
+                View itemView = viewHolder.itemView;
+
+                Paint p = new Paint();
+                p.setColor(getResources().getColor(R.color.red_400));
+                if (dX > 0) {
+                        /* Set your color for positive displacement */
+
+                    // Draw Rect with varying right side, equal to displacement dX
+                    c.drawRect((float) itemView.getLeft(), (float) itemView.getTop(), dX,
+                            (float) itemView.getBottom(), p);
+                } else {
+                        /* Set your color for negative displacement */
+
+                    // Draw Rect with varying left side, equal to the item's right side plus negative displacement dX
+                    c.drawRect((float) itemView.getRight() + dX, (float) itemView.getTop(),
+                            (float) itemView.getRight(), (float) itemView.getBottom(), p);
                 }
-            });
+
+                super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
+            }
+        }
+
+        @Override
+        public int getSwipeDirs(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder) {
+            if(mAdapter.getItemViewType(viewHolder.getAdapterPosition()) == DEFAULT)
+                return super.getSwipeDirs(recyclerView, viewHolder);
+            else return 0;
+
         }
     }
 }

@@ -16,8 +16,6 @@ import com.firebase.client.Query;
 import com.firebase.ui.FirebaseRecyclerAdapter;
 import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
 
-import org.w3c.dom.Text;
-
 
 /**
  * A simple {@link Fragment} subclass.
@@ -67,7 +65,7 @@ public class FriendsListFragment extends Fragment {
 
         // Adapt our things
         mAdapter = new FriendFirebaseAdapter(MessageModel.class,
-                R.layout.tile_message_response,
+                R.layout.tile_message_author,
                 MessageVH.class,
                 queryRef);
 

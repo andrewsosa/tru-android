@@ -23,7 +23,7 @@
             android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".SendingActivity"
-            android:theme="@style/AppTheme.Auth"/>
+            android:theme="@style/AppTheme.Sending"/>
         <activity android:name=".AuthActivity"
             android:theme="@style/AppTheme.Auth"/>
     </application>

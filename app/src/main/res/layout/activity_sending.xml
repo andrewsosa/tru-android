@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context="com.andrewsosa.android.tru.SendingActivity"
-    android:background="@color/primary"
+    android:background="@color/accent"
     android:orientation="vertical">
 
     <android.support.v7.widget.Toolbar
@@ -30,6 +30,7 @@
                 android:layout_marginTop="?attr/actionBarSize"
                 android:textSize="24sp"
                 android:maxLines="10"
+                app:met_maxCharacters="140"
                 android:singleLine="true" />
 
         </RelativeLayout>
