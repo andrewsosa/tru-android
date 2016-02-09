@@ -100,18 +100,19 @@ public class MainActivity extends AppCompatActivity implements BaseFragment.OnFr
             }
         });
 
+        final String authorID = ref.getAuth().getUid();
 
-        ref.child("feed").orderByChild("authorID").equalTo(ref.getAuth().getUid()).addChildEventListener(new ChildEventListener() {
+        ref.child("feed").orderByChild("authorID").equalTo(authorID).addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 MessageModel mm = dataSnapshot.getValue(MessageModel.class);
-                incrementPointsDisplay((int)mm.value);
+                if(mm.getAuthorID().equals(authorID) )incrementPointsDisplay((int)mm.value);
             }
 
             @Override
             public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-                incrementPointsDisplay(1);
-            }
+                MessageModel mm = dataSnapshot.getValue(MessageModel.class);
+                if(mm.getAuthorID().equals(authorID) )incrementPointsDisplay(1);            }
 
             @Override
             public void onChildRemoved(DataSnapshot dataSnapshot) {

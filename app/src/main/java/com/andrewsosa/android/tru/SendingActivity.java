@@ -40,7 +40,7 @@ public class SendingActivity extends AppCompatActivity {
         EditText input = (EditText) findViewById(R.id.et_message);
         final String message = input.getText().toString().trim();
 
-        if(message.length() >0 && message.length()<140) {
+        if(message.length() > 0 && message.length()<=140) {
 
 
             final Firebase users = new Firebase(Tru.URL).child("users");

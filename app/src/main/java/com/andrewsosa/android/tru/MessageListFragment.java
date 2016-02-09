@@ -173,7 +173,7 @@ public class MessageListFragment extends Fragment {
         public MessageVH onCreateViewHolder(ViewGroup parent, int viewType) {
 
             // create a new view
-            int layout = R.layout.tile_message;
+            int layout = (viewType == HIDDEN ? R.layout.tile_message_hidden : R.layout.tile_message);
 
             View v = LayoutInflater.from(parent.getContext()).inflate(layout, parent, false);
 
@@ -189,10 +189,10 @@ public class MessageListFragment extends Fragment {
 
             viewHolder.messageText.setText(model.getContents());
 
-            if (this.getItemViewType(position) == HIDDEN) {
-                viewHolder.tile.setVisibility(View.GONE);
-                viewHolder.messageText.setText(model.getContents());
-            }
+            //if (this.getItemViewType(position) == HIDDEN) {
+                //viewHolder.tile.setVisibility(View.GONE);
+                //viewHolder.messageText.setText(model.getContents());
+            //}
 
             if (this.getItemViewType(position) == AUTHOR) {
                 String x = "" + model.getValue() + " tru points";
@@ -310,7 +310,8 @@ public class MessageListFragment extends Fragment {
         public void onSwiped(RecyclerView.ViewHolder viewHolder, int swipeDir) {
             //Remove swiped item from list and notify the RecyclerView
             try {
-                mAdapter.getRef(viewHolder.getAdapterPosition()).removeValue();
+                //mAdapter.getRef(viewHolder.getAdapterPosition()).removeValue();
+                mAdapter.getRef(viewHolder.getAdapterPosition()).child("hidden").child(new Firebase(Tru.URL).getAuth().getUid()).setValue(true);
             } catch (Exception e) {
                 Log.e("Tru", "Someone did the TJ thing");
             }
