@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <array name="tile_colors">
+        <item>@color/tile_red</item>
+        <item>@color/tile_blue</item>
+        <item>@color/tile_yellow</item>
+        <item>@color/tile_green</item>
+    </array>
+</resources>

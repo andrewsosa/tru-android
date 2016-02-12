@@ -32,7 +32,7 @@
                     android:layout_height="match_parent"
                     android:text="tru"
                     android:gravity="center"
-                    android:textSize="24sp"
+                    android:textSize="28sp"
                     android:textColor="@color/primaryTextLight" />
 
                 <TextView

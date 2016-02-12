@@ -14,6 +14,7 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.DisplayMetrics;
 import android.view.View;
 import android.widget.TextView;
 
@@ -53,13 +54,15 @@ public class MainActivity extends AppCompatActivity implements BaseFragment.OnFr
 
         mViewPager.setAdapter(new CustomPagerAdapter(getSupportFragmentManager()));
         mTabLayout.setupWithViewPager(mViewPager);
+        mViewPager.setPageMargin(dpToPx(50));
+
 
 
         final Firebase ref = new Firebase(Tru.URL);
 
         TextView tru = (TextView) findViewById(R.id.tru);
         tru.setTypeface(Typeface.createFromAsset(getAssets(), "ProductSans.ttf"));
-        tru.setLetterSpacing((float)0.1);
+        //tru.setLetterSpacing((float)0.1);
 
 
         final FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
@@ -67,6 +70,14 @@ public class MainActivity extends AppCompatActivity implements BaseFragment.OnFr
             @Override
             public void onClick(View view) {
                 startActivity(new Intent(MainActivity.this, SendingActivity.class));
+            }
+        });
+
+        fab.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                ref.unauth();
+                return true;
             }
         });
 
@@ -132,10 +143,17 @@ public class MainActivity extends AppCompatActivity implements BaseFragment.OnFr
 
     }
 
+
+
     public void incrementPointsDisplay(int val) {
         truPoints = truPoints + val;
         String x = ""+truPoints;
         mPoints.setText(x);
+    }
+
+    public int dpToPx(int dp) {
+        DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
+        return Math.round(dp * (displayMetrics.xdpi / DisplayMetrics.DENSITY_DEFAULT));
     }
 
 
@@ -152,7 +170,8 @@ public class MainActivity extends AppCompatActivity implements BaseFragment.OnFr
         } else {
             //q = ref.child("users").child(ref.getAuth().getUid()).child("sent");
             q = ref.child("feed").orderByChild("authorID").equalTo(ref.getAuth().getUid());
-            return FriendsListFragment.newInstance(q);
+            //return FriendsListFragment.newInstance(q);
+            return MessageListFragment.newInstance(q);
         }
 
     }

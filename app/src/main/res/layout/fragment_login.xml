@@ -1,0 +1,65 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".AuthActivity">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center_horizontal"
+        android:padding="32dp">
+
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="56dp"
+            android:id="@+id/imageView2"
+            android:src="@mipmap/tru_text"
+            android:scaleType="fitCenter"
+            android:layout_marginTop="40dp"
+            android:layout_marginBottom="16dp" />
+
+        <com.rengwuxian.materialedittext.MaterialEditText
+            android:id="@+id/et_email"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="email"
+            android:textColor="@color/primary"
+            app:met_baseColor="@color/grey_600"
+            app:met_primaryColor="@color/primary"
+            android:layout_marginTop="16dp"
+            android:textSize="24sp"
+            android:singleLine="true" />
+
+        <com.rengwuxian.materialedittext.MaterialEditText
+            android:id="@+id/et_password"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="password"
+            android:textColor="@color/primary"
+            app:met_baseColor="@color/grey_600"
+            app:met_primaryColor="@color/primary"
+            android:layout_marginTop="16dp"
+            android:textSize="24sp"
+            android:inputType="textPassword"
+            android:fontFamily="sans-serif"
+            android:singleLine="true" />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="let&apos;s go"
+            android:id="@+id/btn_submit"
+            style="?android:attr/borderlessButtonStyle"
+            android:textColor="@color/primary"
+            android:textSize="16sp"
+            android:layout_gravity="right"
+            android:padding="16dp" />
+
+
+    </LinearLayout>
+
+</FrameLayout>

@@ -1,6 +1,7 @@
 package com.andrewsosa.android.tru;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.Toast;
@@ -17,29 +18,18 @@ public class TruActivity extends AppCompatActivity {
 
         Firebase ref = new Firebase(Tru.URL);
 
+        Intent intent;
+
+
         if(ref.getAuth() == null) {
-            ref.authAnonymously(new Firebase.AuthResultHandler() {
-                @Override
-                public void onAuthenticated(AuthData authData) {
-                    // we've authenticated this session with your Firebase app
-                    startActivity(new Intent(TruActivity.this, MainActivity.class));
-                    finish();
+            intent = new Intent(this, AuthActivity.class);
 
-                }
-                @Override
-                public void onAuthenticationError(FirebaseError firebaseError) {
-                    // there was an error
-                    Toast.makeText(TruActivity.this, "Unable to connect", Toast.LENGTH_LONG).show();
-                    finish();
-                }
-            });
         } else {
-            Intent intent;
             intent = new Intent(this, MainActivity.class);
-            startActivity(intent);
-            finish();
-
         }
+
+        startActivity(intent);
+        finish();
 
 
     }

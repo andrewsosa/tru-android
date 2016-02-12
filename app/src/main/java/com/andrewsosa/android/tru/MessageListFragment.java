@@ -9,13 +9,13 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
-import android.support.v4.*;
 import android.support.v4.BuildConfig;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -67,6 +67,11 @@ public class MessageListFragment extends Fragment {
         this.queryRef = queryRef;
     }
 
+    public int dpToPx(int dp) {
+        DisplayMetrics displayMetrics = getContext().getResources().getDisplayMetrics();
+        return Math.round(dp * (displayMetrics.xdpi / DisplayMetrics.DENSITY_DEFAULT));
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -95,11 +100,12 @@ public class MessageListFragment extends Fragment {
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         mRecyclerView.setAdapter(mAdapter);
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
-        mRecyclerView.addItemDecoration(new HorizontalDividerItemDecoration
+        /*mRecyclerView.addItemDecoration(new HorizontalDividerItemDecoration
                 .Builder(getContext())
                 .colorResId(R.color.dividerColor)
                 .showLastDivider()
                 .build());
+        */
 
         mAdapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
             @Override
@@ -137,6 +143,7 @@ public class MessageListFragment extends Fragment {
         TextView messageText;
         TextView revealText;
         TextView reactionText;
+        TextView authorText;
         ImageView icon;
 
         public MessageVH(View itemView) {
@@ -145,6 +152,7 @@ public class MessageListFragment extends Fragment {
             this.messageText = (TextView) itemView.findViewById(R.id.tv_message);
             this.revealText = (TextView) itemView.findViewById(R.id.tv_tru);
             this.reactionText = (TextView) itemView.findViewById(R.id.tv_response);
+            this.authorText = (TextView) itemView.findViewById(R.id.tv_author);
             this.icon = (ImageView) itemView.findViewById(R.id.icon);
         }
     }
@@ -188,9 +196,18 @@ public class MessageListFragment extends Fragment {
         @Override
         protected void populateViewHolder(final MessageVH viewHolder, final MessageModel model, int position) {
 
-            Log.d("tru", ""+getItemViewType(position));
+            final Firebase ref = mAdapter.getRef(viewHolder.getAdapterPosition());
 
             viewHolder.messageText.setText(model.getContents());
+            viewHolder.messageText.setTypeface(Typeface.createFromAsset(getContext().getAssets(), "ProductSans.ttf"));
+            viewHolder.revealText.setTypeface(Typeface.createFromAsset(getContext().getAssets(), "ProductSans.ttf"));
+
+            int[] colors = getContext().getResources().getIntArray(R.array.tile_colors);
+            viewHolder.messageText.setBackgroundColor(colors[(Math.abs((int)model.getTimestamp()))%4]);
+
+            String x = "" + model.getValue() + " tru";
+
+
 
             //if (this.getItemViewType(position) == HIDDEN) {
                 //viewHolder.tile.setVisibility(View.GONE);
@@ -198,26 +215,25 @@ public class MessageListFragment extends Fragment {
             //}
 
             if (this.getItemViewType(position) == AUTHOR) {
-                String x = "" + model.getValue() + " tru points";
-                viewHolder.reactionText.setVisibility(View.VISIBLE);
+                //viewHolder.reactionText.setVisibility(View.VISIBLE);
                 viewHolder.reactionText.setText(x);
                 viewHolder.icon.setImageResource(R.drawable.ic_subdirectory_arrow_right_black_24dp);
-                viewHolder.messageText.setTypeface(Typeface.create("sans-serif", Typeface.NORMAL));
+                viewHolder.authorText.setText("you posted this");
+                //viewHolder.messageText.setTypeface(Typeface.create("sans-serif", Typeface.NORMAL));
 
 
             }
 
             if (this.getItemViewType(position) == AGREED) {
-                viewHolder.icon.setImageResource(R.drawable.ic_check_box_outline_blank_black_24dp);
-                viewHolder.messageText.setTypeface(Typeface.create("sans-serif", Typeface.NORMAL));
+                viewHolder.reactionText.setText(x);
+                //viewHolder.icon.setImageResource(R.drawable.ic_check_box_outline_blank_black_24dp);
+                //viewHolder.messageText.setTypeface(Typeface.create("sans-serif", Typeface.NORMAL));
             }
 
             if (this.getItemViewType(position) == DEFAULT) {
+                viewHolder.reactionText.setText("tru?");
 
-                viewHolder.revealText.setTypeface(Typeface.createFromAsset(getContext().getAssets(), "ProductSans.ttf"));
-                viewHolder.revealText.setLetterSpacing((float) 0.3);
 
-                viewHolder.messageText.setTypeface(Typeface.create("sans-serif-medium", Typeface.NORMAL));
                 viewHolder.icon.setImageResource(R.drawable.ic_chevron_right_black_32dp);
 
                 viewHolder.tile.setClickable(true);
@@ -253,7 +269,6 @@ public class MessageListFragment extends Fragment {
                                     new Handler().postDelayed(new Runnable() {
                                         @Override
                                         public void run() {
-                                            final Firebase ref = mAdapter.getRef(viewHolder.getAdapterPosition());
 
                                             Firebase target = new Firebase(Tru.URL)
                                                     .child("feed")
@@ -325,20 +340,20 @@ public class MessageListFragment extends Fragment {
                 // Get RecyclerView item from the ViewHolder
                 View itemView = viewHolder.itemView;
 
+                int padding = dpToPx(16);
+
                 Paint p = new Paint();
-                p.setColor(getResources().getColor(R.color.red_400));
+                p.setColor(getResources().getColor(R.color.red_300));
                 if (dX > 0) {
-                        /* Set your color for positive displacement */
 
                     // Draw Rect with varying right side, equal to displacement dX
                     c.drawRect((float) itemView.getLeft(), (float) itemView.getTop(), dX,
-                            (float) itemView.getBottom(), p);
+                            ((float) itemView.getBottom()-padding+1), p);
                 } else {
-                        /* Set your color for negative displacement */
 
                     // Draw Rect with varying left side, equal to the item's right side plus negative displacement dX
                     c.drawRect((float) itemView.getRight() + dX, (float) itemView.getTop(),
-                            (float) itemView.getRight(), (float) itemView.getBottom(), p);
+                            (float) itemView.getRight(), (float) itemView.getBottom()-padding, p);
                 }
 
                 super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);

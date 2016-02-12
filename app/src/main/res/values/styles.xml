@@ -19,6 +19,7 @@
 
     <style name="AppTheme.Auth">
 
+        <item name="android:statusBarColor">@color/primary</item>
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
 

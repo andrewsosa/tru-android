@@ -22,7 +22,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="16dp"
-                android:hint="word."
+                android:hint="speak the truth"
                 android:textColor="@color/grey_white_1000"
                 app:met_baseColor="@color/grey_white_1000"
                 app:met_primaryColor="@color/grey_white_1000"
@@ -30,7 +30,7 @@
                 android:layout_marginTop="?attr/actionBarSize"
                 android:textSize="24sp"
                 android:maxLines="10"
-                app:met_maxCharacters="140"
+                app:met_maxCharacters="90"
                 android:singleLine="true" />
 
         </RelativeLayout>
