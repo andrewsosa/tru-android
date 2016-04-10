@@ -6,10 +6,10 @@
     android:layout_height="match_parent"
     android:layout_width="match_parent"
     android:orientation="vertical"
-    android:background="@color/background">
+    android:background="@color/grey_50">
 
 
-    <com.andrewsosa.android.tru.CustomViewPager
+    <com.andrewthewizard.tru.android.CustomViewPager
         android:id="@+id/viewpager"
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -20,10 +20,9 @@
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:layout_weight="0"
-        android:background="@color/background"
         android:elevation="8dp"
         app:tabIndicatorColor="@android:color/transparent"
-        app:tabSelectedTextColor="@color/primary"
+        app:tabSelectedTextColor="@color/accent"
         app:tabTextColor="@color/grey_600"
         />
 

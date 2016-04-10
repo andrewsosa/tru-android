@@ -6,7 +6,10 @@
         <item name="colorPrimary">@color/primary</item>
         <item name="colorPrimaryDark">@color/primaryDark</item>
         <item name="colorAccent">@color/accent</item>
+
     </style>
+
+    <!-- Wrapper Styles -->
 
     <style name="AppTheme.NoActionBar">
         <item name="windowActionBar">false</item>
@@ -14,15 +17,19 @@
     </style>
 
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
-
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
-    <style name="AppTheme.Auth">
 
+    <!-- Activity Themes -->
+
+    <style name="AppTheme.MainActivity" parent="AppTheme.NoActionBar">
+        <item name="android:statusBarColor">@color/grey_800</item>
+    </style>
+
+    <style name="AppTheme.Auth">
         <item name="android:statusBarColor">@color/primary</item>
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
-
     </style>
 
     <style name="AppTheme.Sending">

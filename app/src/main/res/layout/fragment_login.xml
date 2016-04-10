@@ -13,23 +13,25 @@
         android:padding="32dp">
 
 
-        <ImageView
+        <com.andrewthewizard.tru.android.StyleableTextView
             android:layout_width="wrap_content"
             android:layout_height="56dp"
-            android:id="@+id/imageView2"
-            android:src="@mipmap/tru_text"
-            android:scaleType="fitCenter"
+            android:id="@+id/tv_title"
+            app:fontName="MontserratBold.ttf"
             android:layout_marginTop="40dp"
-            android:layout_marginBottom="16dp" />
+            android:layout_marginBottom="16dp"
+            android:textSize="45sp"
+            android:text="tru."
+            android:textColor="@color/accent" />
 
         <com.rengwuxian.materialedittext.MaterialEditText
             android:id="@+id/et_email"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="email"
-            android:textColor="@color/primary"
+            android:textColor="@color/accent"
             app:met_baseColor="@color/grey_600"
-            app:met_primaryColor="@color/primary"
+            app:met_primaryColor="@color/accent"
             android:layout_marginTop="16dp"
             android:textSize="24sp"
             android:singleLine="true" />
@@ -39,9 +41,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="password"
-            android:textColor="@color/primary"
+            android:textColor="@color/accent"
             app:met_baseColor="@color/grey_600"
-            app:met_primaryColor="@color/primary"
+            app:met_primaryColor="@color/accent"
             android:layout_marginTop="16dp"
             android:textSize="24sp"
             android:inputType="textPassword"
@@ -54,7 +56,7 @@
             android:text="let&apos;s go"
             android:id="@+id/btn_submit"
             style="?android:attr/borderlessButtonStyle"
-            android:textColor="@color/primary"
+            android:textColor="@color/accent"
             android:textSize="16sp"
             android:layout_gravity="right"
             android:padding="16dp" />

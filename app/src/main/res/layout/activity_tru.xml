@@ -7,7 +7,7 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="com.andrewsosa.android.tru.TruActivity">
+    tools:context="com.andrewthewizard.tru.android.TruActivity">
 
     <TextView
         android:layout_width="wrap_content"
