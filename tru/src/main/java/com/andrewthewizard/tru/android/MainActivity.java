@@ -52,7 +52,7 @@ public class MainActivity extends AppCompatActivity implements BaseFragment.OnFr
 
         mViewPager.setAdapter(new CustomPagerAdapter(getSupportFragmentManager()));
         mTabLayout.setupWithViewPager(mViewPager);
-        mViewPager.setPageMargin(dpToPx(50));
+        mViewPager.setPageMargin(dpToPx(32));
 
 
 
@@ -121,28 +121,22 @@ public class MainActivity extends AppCompatActivity implements BaseFragment.OnFr
             @Override
             public void onChildChanged(DataSnapshot dataSnapshot, String s) {
                 MessageModel mm = dataSnapshot.getValue(MessageModel.class);
-                if(mm.getAuthorID().equals(authorID) )incrementPointsDisplay(1);            }
-
-            @Override
-            public void onChildRemoved(DataSnapshot dataSnapshot) {
-
+                if(mm.getAuthorID().equals(authorID) )incrementPointsDisplay(1);
             }
 
             @Override
-            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-
-            }
+            public void onChildRemoved(DataSnapshot dataSnapshot) {}
 
             @Override
-            public void onCancelled(FirebaseError firebaseError) {
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {}
 
-            }
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {}
+
         });
 
     }
-
-
-
+    
     public void incrementPointsDisplay(int val) {
         truPoints = truPoints + val;
         String x = ""+truPoints;
@@ -191,7 +185,7 @@ public class MainActivity extends AppCompatActivity implements BaseFragment.OnFr
 
         @Override
         public CharSequence getPageTitle(int position) {
-            return position == 0 ? "what's Fire" : "you said";
+            return position == 0 ? "what's Fire" : "the fam";
         }
     }
 
