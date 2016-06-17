@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "520017187868",
+    "firebase_url": "https://tru-firebase.firebaseio.com",
+    "project_id": "tru-firebase",
+    "storage_bucket": "tru-firebase.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:520017187868:android:fe0b95d4087568bc",
+        "android_client_info": {
+          "package_name": "com.andrewthewizard.tru.android"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "520017187868-inur0cqi8jbvr67f0vo9a5gd1722mn3o.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD8PD9amuKuNYfSIIc-B580lSuGnngxnVY"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

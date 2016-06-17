@@ -1,4 +1,4 @@
-package com.andrewthewizard.tru.android;
+package com.andrewthewizard.tru.android.fragment;
 
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -9,8 +9,8 @@ import android.support.v4.app.Fragment;
 abstract public class AuthFragment extends Fragment {
 
     public interface AuthInteractionListener {
-        void login(String email, String pwd, @Nullable String user);
-        void signup(String email, String pwd, String user);
+        void login(String email, String pwd);
+        void signup(String email, String pwd);
     }
 
 }

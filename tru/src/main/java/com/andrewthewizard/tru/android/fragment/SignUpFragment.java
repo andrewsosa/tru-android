@@ -1,4 +1,4 @@
-package com.andrewthewizard.tru.android;
+package com.andrewthewizard.tru.android.fragment;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -10,6 +10,8 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 
+import com.andrewthewizard.tru.android.R;
+
 
 public class SignUpFragment extends Fragment {
 
@@ -18,7 +20,6 @@ public class SignUpFragment extends Fragment {
 
     EditText email;
     EditText password;
-    EditText username;
     Button submit;
 
     // Required empty public constructor
@@ -37,7 +38,6 @@ public class SignUpFragment extends Fragment {
 
         email = (EditText) v.findViewById(R.id.et_email);
         password = (EditText) v.findViewById(R.id.et_password);
-        username = (EditText) v.findViewById(R.id.et_username);
         submit = (Button) v.findViewById(R.id.btn_submit);
 
         return v;
@@ -51,8 +51,7 @@ public class SignUpFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 mListener.signup(email.getText().toString(),
-                        password.getText().toString(),
-                        username.getText().toString());
+                        password.getText().toString());
             }
         });
 

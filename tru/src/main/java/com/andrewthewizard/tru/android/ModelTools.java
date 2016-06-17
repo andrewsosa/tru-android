@@ -1,5 +1,6 @@
 package com.andrewthewizard.tru.android;
 
+import com.andrewthewizard.tru.android.model.MessageModel;
 import com.firebase.client.DataSnapshot;
 
 /**

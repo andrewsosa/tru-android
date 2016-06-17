@@ -1,4 +1,4 @@
-package com.andrewthewizard.tru.android;
+package com.andrewthewizard.tru.android.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 

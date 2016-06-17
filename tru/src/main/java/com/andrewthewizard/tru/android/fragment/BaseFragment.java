@@ -1,4 +1,4 @@
-package com.andrewthewizard.tru.android;
+package com.andrewthewizard.tru.android.fragment;
 
 import android.support.v4.app.Fragment;
 

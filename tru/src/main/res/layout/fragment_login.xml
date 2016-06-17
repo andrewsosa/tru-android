@@ -13,7 +13,7 @@
         android:padding="32dp">
 
 
-        <com.andrewthewizard.tru.android.StyleableTextView
+        <com.andrewthewizard.tru.android.ui.StyleableTextView
             android:layout_width="wrap_content"
             android:layout_height="56dp"
             android:id="@+id/tv_title"

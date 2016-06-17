@@ -1,4 +1,4 @@
-package com.andrewthewizard.tru.android;
+package com.andrewthewizard.tru.android.fragment;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -9,6 +9,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+
+import com.andrewthewizard.tru.android.R;
 
 
 public class LoginFragment extends Fragment {
@@ -48,7 +50,7 @@ public class LoginFragment extends Fragment {
         submit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mListener.login(email.getText().toString(), password.getText().toString(), null);
+                mListener.login(email.getText().toString(), password.getText().toString());
             }
         });
 

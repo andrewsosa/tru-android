@@ -1,10 +1,12 @@
-package com.andrewthewizard.tru.android;
+package com.andrewthewizard.tru.android.ui;
 
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Typeface;
 import android.util.AttributeSet;
 import android.widget.TextView;
+
+import com.andrewthewizard.tru.android.R;
 
 public class StyleableTextView extends TextView {
 

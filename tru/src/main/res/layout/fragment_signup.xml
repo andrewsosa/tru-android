@@ -49,18 +49,6 @@
             android:fontFamily="sans-serif"
             android:singleLine="true" />
 
-        <com.rengwuxian.materialedittext.MaterialEditText
-            android:id="@+id/et_username"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="\@username"
-            android:textColor="@color/accent"
-            app:met_baseColor="@color/grey_600"
-            app:met_primaryColor="@color/accent"
-            android:layout_marginTop="16dp"
-            android:textSize="24sp"
-            android:singleLine="true" />
-
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

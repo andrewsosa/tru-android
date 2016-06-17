@@ -7,7 +7,8 @@ import com.firebase.client.Firebase;
 
 public class Tru extends Application {
 
-    public final static String URL = "https://tru.firebaseio.com";
+    public final static String FIREBASE_URL = "https://tru.firebaseio.com";
+    public final static String FIREBASE_URL2 = "https://tru-firebase.firebaseio.com";
 
     @Override
     public void onCreate() {

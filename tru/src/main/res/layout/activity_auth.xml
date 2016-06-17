@@ -9,7 +9,7 @@
     android:background="@color/grey_50">
 
 
-    <com.andrewthewizard.tru.android.CustomViewPager
+    <com.andrewthewizard.tru.android.ui.CustomViewPager
         android:id="@+id/viewpager"
         android:layout_width="match_parent"
         android:layout_height="0dp"

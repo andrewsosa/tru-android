@@ -1,4 +1,4 @@
-package com.andrewthewizard.tru.android;
+package com.andrewthewizard.tru.android.ui;
 
 import android.content.Context;
 import android.support.v4.view.ViewPager;

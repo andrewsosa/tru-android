@@ -2,10 +2,10 @@ apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion 23
-    buildToolsVersion "23.0.2"
+    buildToolsVersion '23.0.3'
 
     defaultConfig {
-        applicationId "com.andrewsosa.android.tru"
+        applicationId "com.andrewthewizard.tru.android"
         minSdkVersion 21
         targetSdkVersion 23
         versionCode 6
@@ -28,8 +28,6 @@ dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     testCompile 'junit:junit:4.12'
 
-    //compile 'com.squareup.retrofit2:retrofit:2.0.0-beta4'
-
     compile 'com.android.support:appcompat-v7:23.4.0'
     compile 'com.android.support:design:23.4.0'
     compile 'com.android.support:support-v4:23.4.0'
@@ -37,6 +35,16 @@ dependencies {
     compile 'com.firebase:firebase-client-android:2.5.+'
     compile 'com.firebaseui:firebase-ui:0.3.1'
 
+    compile 'com.google.firebase:firebase-core:9.0.2'
+    compile 'com.google.firebase:firebase-auth:9.0.2'           // Login
+    compile 'com.google.firebase:firebase-messaging:9.0.2'      // Notifications
+    compile 'com.google.firebase:firebase-database:9.0.2'       // Instant messaging
+
+    compile 'com.squareup.retrofit2:retrofit:2.0.2'             // REST API
+
     compile 'com.yqritc:recyclerview-flexibledivider:1.2.8'
     compile 'com.rengwuxian.materialedittext:library:2.1.4'
 }
+
+// Add to the bottom of the file
+apply plugin: 'com.google.gms.google-services'

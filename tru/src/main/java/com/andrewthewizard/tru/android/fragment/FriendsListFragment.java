@@ -1,4 +1,4 @@
-package com.andrewthewizard.tru.android;
+package com.andrewthewizard.tru.android.fragment;
 
 import android.content.Context;
 import android.net.Uri;
@@ -12,6 +12,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.andrewthewizard.tru.android.R;
+import com.andrewthewizard.tru.android.model.MessageModel;
 import com.firebase.client.Query;
 import com.firebase.ui.FirebaseRecyclerAdapter;
 import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;

@@ -1,4 +1,4 @@
-package com.andrewthewizard.tru.android;
+package com.andrewthewizard.tru.android.activity;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -7,6 +7,9 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.andrewthewizard.tru.android.R;
+import com.andrewthewizard.tru.android.Tru;
+import com.andrewthewizard.tru.android.model.MessageModel;
 import com.firebase.client.Firebase;
 
 import java.util.Calendar;
@@ -39,10 +42,10 @@ public class SendingActivity extends AppCompatActivity {
         if(message.length() > 0 && message.length()<=90) {
 
 
-            final Firebase users = new Firebase(Tru.URL).child("users");
+            final Firebase users = new Firebase(Tru.FIREBASE_URL).child("users");
             final String authorID = users.getAuth().getUid();
 
-            final Firebase feedRef = new Firebase(Tru.URL).child("feed").push();
+            final Firebase feedRef = new Firebase(Tru.FIREBASE_URL).child("feed").push();
             feedRef.setValue(new MessageModel(authorID, message));
             feedRef.setPriority(0-Calendar.getInstance().getTimeInMillis());
 
